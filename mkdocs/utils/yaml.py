@@ -10,6 +10,7 @@ import mergedeep  # type: ignore
 import yaml
 import yaml.constructor
 import yaml_env_tag  # type: ignore
+from yamlinclude import YamlIncludeConstructor
 
 from mkdocs import exceptions
 
@@ -121,7 +122,9 @@ def get_yaml_loader(loader=yaml.Loader, config: MkDocsConfig | None = None):
 
     if config is not None:
         Loader.add_constructor('!relative', functools.partial(_construct_dir_placeholder, config))
-
+        # add YAML include constructor
+        YamlIncludeConstructor.add_to_loader_class(loader_class=Loader, base_dir=os.path.dirname(config.config_file_path))
+        
     return Loader
 
 
